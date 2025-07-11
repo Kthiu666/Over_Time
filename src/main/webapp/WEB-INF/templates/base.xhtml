@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>
+            <ui:insert name="title-view">OverTime</ui:insert>
+        </title>
+
+        <h:outputStylesheet library="primefaces" value="themes/saga/theme.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+
+        <style>
+            body, .ui-widget {
+                font-family: 'Poppins', sans-serif;
+            }
+            .app-container {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                background-color: #f4f7f9;
+            }
+            .content-container {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+            }
+            .footer-container {
+                background-color: #ffffff;
+                border-top: 1px solid #e0e0e0;
+                padding: 1.5rem;
+                text-align: center;
+                flex-shrink: 0;
+            }
+            .footer-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            .logo-overtime-footer {
+                max-height: 40px;
+                opacity: 0.8;
+            }
+        </style>
+        <ui:insert name="head"/>
+    </h:head>
+
+<h:body>
+    <div class="app-container">
+        <main id="content" class="content-container">
+            <ui:insert name="content"/>
+        </main>
+
+        <footer id="footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <h:graphicImage value="Logo-futbol.jpg" styleClass="logo-overtime-footer" />
+                    <h:outputText value="© #{now.year} OverTime Eventos Deportivos. Todos los derechos reservados."
+                                  style="font-size: 0.9rem; color: #555;"/>
+                </div>
+            </div>
+        </footer>
+    </div>
+</h:body>
+
+</html>

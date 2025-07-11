@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/base.xhtml">
+    <ui:define name="title-view">OverTime - Gestión de Torneos</ui:define>
+
+    <ui:define name="content">
+        <h:form id="tournamentManagementForm"> <style>
+            .section-header { font-size: 2rem; font-weight: bold; color: #1A1A1A; margin-top: 2rem; margin-bottom: 1.5rem; text-align: center; }
+            .form-panel { width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; margin-bottom: 2rem; }
+            .data-table-panel { width: 100%; max-width: 1000px; margin-left: auto; margin-right: auto; margin-bottom: 2rem; }
+            .action-button { font-size: 1.1rem !important; padding: 10px 25px !important; font-weight: 600 !important; transition: transform 0.2s ease; }
+        </style>
+
+            <h:panelGroup rendered="#{authBean.userLoggedIn}">
+                <div class="section-header">Gestión de Torneos</div>
+
+                <p:messages id="messages" showDetail="true" closable="true">
+                    <p:autoUpdate/> </p:messages>
+
+                <p:panel header="Crear Nuevo Torneo" styleClass="form-panel ui-shadow-3">
+                    <h:panelGrid columns="2" cellpadding="5" style="width:100%;">
+                        <p:outputLabel for="nombreTorneo" value="Nombre del Torneo:"/>
+                        <p:inputText id="nombreTorneo" value="#{torneoBean.nombreNuevoTorneo}" required="true" requiredMessage="El nombre del torneo es obligatorio"/>
+
+                        <p:outputLabel for="fechaInicio" value="Fecha de Inicio:"/>
+                        <p:calendar id="fechaInicio" value="#{torneoBean.fechaInicioTorneo}" pattern="dd/MM/yyyy" required="true" requiredMessage="La fecha de inicio es obligatoria" showOn="button"/>
+
+                        <p:outputLabel for="numEquipos" value="Número de Equipos:"/>
+                        <p:spinner id="numEquipos" value="#{torneoBean.numeroEquipos}" min="2" max="32" required="true" requiredMessage="El número de equipos es obligatorio"/>
+                    </h:panelGrid>
+                    <f:facet name="footer">
+                        <p:commandButton value="Crear Torneo"
+                                         action="#{torneoBean.crearNuevoTorneo}"
+                                         update=":tournamentManagementForm:messages nombreTorneo fechaInicio numEquipos"  icon="pi pi-plus"
+                                         style="background-color:#003366; color:white; font-weight:bold;"/>
+                    </f:facet>
+                </p:panel>
+
+                <p:panel header="Registrar Nuevo Partido" styleClass="form-panel ui-shadow-3">
+                    <h:panelGrid columns="2" cellpadding="5" style="width:100%;">
+                        <p:outputLabel for="equipoLocal" value="Equipo Local:"/>
+                        <p:inputText id="equipoLocal" value="#{torneoBean.equipoLocal}" required="true" requiredMessage="El equipo local es obligatorio"/>
+
+                        <p:outputLabel for="golesLocal" value="Goles Local:"/>
+                        <p:spinner id="golesLocal" value="#{torneoBean.golesLocal}" min="0" required="true" requiredMessage="Los goles locales son obligatorios"/>
+
+                        <p:outputLabel for="equipoVisitante" value="Equipo Visitante:"/>
+                        <p:inputText id="equipoVisitante" value="#{torneoBean.equipoVisitante}" required="true" requiredMessage="El equipo visitante es obligatorio"/>
+
+                        <p:outputLabel for="golesVisitante" value="Goles Visitante:"/>
+                        <p:spinner id="golesVisitante" value="#{torneoBean.golesVisitante}" min="0" required="true" requiredMessage="Los goles visitantes son obligatorios"/>
+
+                        <p:outputLabel for="fechaPartido" value="Fecha del Partido:"/>
+                        <p:calendar id="fechaPartido" value="#{torneoBean.fechaPartido}" pattern="dd/MM/yyyy HH:mm" mask="true" required="true" requiredMessage="La fecha del partido es obligatoria" showOn="button"/>
+                    </h:panelGrid>
+                    <f:facet name="footer">
+                        <p:commandButton value="Registrar Partido"
+                                         action="#{torneoBean.registrarPartido}"
+                                         update=":tournamentManagementForm:messages :tournamentManagementForm:dtPartidos equipoLocal golesLocal equipoVisitante golesVisitante fechaPartido" icon="pi pi-save"
+                                         style="background-color:#FF4D00; color:white; font-weight:bold;"/>
+                    </f:facet>
+                </p:panel>
+
+                <p:panel header="Partidos Registrados" styleClass="data-table-panel ui-shadow-3">
+                    <p:dataTable id="dtPartidos" value="#{torneoBean.partidosRegistrados}" var="partido" emptyMessage="No se han registrado partidos aún." responsiveLayout="scroll">
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{partido.fecha}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Local">#{partido.equipoLocal}</p:column>
+                        <p:column headerText="Resultado">#{partido.golesLocal} - #{partido.golesVisitante}</p:column>
+                        <p:column headerText="Visitante">#{partido.equipoVisitante}</p:column>
+                    </p:dataTable>
+                </p:panel>
+
+                <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+                    <p:button value="Volver al Inicio" outcome="index.xhtml"
+                              style="background-color: #003366; border-color: #003366; color: white; margin-right: 1rem;"
+                              icon="pi pi-arrow-left" styleClass="action-button" />
+                    <p:button value="Ver Estadísticas" outcome="estadisticas.xhtml"
+                              style="background-color: #FF4D00; border-color: #FF4D00; color: white;"
+                              icon="pi pi-chart-bar" styleClass="action-button" />
+                </div>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not authBean.userLoggedIn}">
+                <div class="welcome-card">
+                    <h:graphicImage value="#{request.contextPath}/images/logo_overtime.jpg" styleClass="logo-overtime-main" />
+                    <h2 class="welcome-title">Acceso Restringido</h2>
+                    <p style="font-size: 1.2rem; color: #555;">Por favor, inicia sesión para acceder a la gestión de torneos.</p>
+                    <p:commandButton value="Ir a Login" icon="pi pi-arrow-right"
+                                     action="login.xhtml?faces-redirect=true"
+                                     styleClass="action-button" />
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

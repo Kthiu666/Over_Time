@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/base.xhtml">
+    <ui:define name="title-view">OverTime - Inicio</ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <style>
+                .welcome-card { width: 95%; max-width: 800px; margin: 0 auto; border-radius: 15px; padding: 40px; background-color: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+                .welcome-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+                .logo-overtime-main { max-width: 150px; display: block; margin: 0 auto 2rem auto; }
+                .welcome-title { font-size: 2.2rem; font-weight: 700; color: #1A1A1A; margin-bottom: 1rem; }
+                .welcome-title span { color: #FF4D00; }
+                .features-list { list-style: none; padding: 0; margin: 2rem 0; text-align: left; display: inline-block; }
+                .features-list li { font-size: 1.1rem; color: #333; margin-bottom: 1rem; display: flex; align-items: center; }
+                .features-list .pi { color: #FF4D00; font-size: 1.5rem; margin-right: 1rem; }
+                .action-button { font-size: 1.1rem !important; padding: 12px 30px !important; font-weight: 600 !important; background: #FF4D00 !important; border-color: #FF4D00 !important; transition: background-color 0.3s ease, transform 0.2s ease; }
+                .action-button:hover { background: #000000 !important; border-color: #000000 !important; transform: scale(1.05); }
+            </style>
+
+            <h:panelGroup rendered="#{authBean.userLoggedIn}">
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem;">
+                    <p:commandButton value="Gestionar Torneos"
+                                     icon="pi pi-pencil"
+                                     action="tournament_management.xhtml?faces-redirect=true"
+                                     style="background-color:#003366; color:white; font-weight:bold;" />
+                    <p:commandButton value="Ver Estadísticas"
+                                     icon="pi pi-chart-bar"
+                                     action="estadisticas.xhtml?faces-redirect=true"
+                                     style="background-color:#003366; color:white; font-weight:bold;" />
+                </div>
+
+                <p:dataTable value="#{torneoBean.tablaPosiciones}" var="equipo" stripedRows="true" responsiveLayout="scroll" rendered="#{not empty torneoBean.tablaPosiciones}">
+                    <f:facet name="header">Tabla de Posiciones Actual</f:facet>
+                    <p:column headerText="Posición">#{equipo.posicion}</p:column>
+                    <p:column headerText="Equipo">#{equipo.nombre}</p:column>
+                    <p:column headerText="PJ">#{equipo.jugados}</p:column>
+                    <p:column headerText="PG">#{equipo.ganados}</p:column>
+                    <p:column headerText="PE">#{equipo.empatados}</p:column>
+                    <p:column headerText="PP">#{equipo.perdidos}</p:column>
+                    <p:column headerText="PTS">#{equipo.puntos}</p:column>
+                </p:dataTable>
+                <p:outputPanel rendered="#{empty torneoBean.tablaPosiciones}" style="text-align: center; margin-top: 2rem;">
+                    <p style="font-size: 1.1rem; color: #666;">No hay torneos activos para mostrar. ¡Crea uno nuevo!</p>
+                </p:outputPanel>
+
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not authBean.userLoggedIn}">
+                <div class="welcome-card">
+                    <h:graphicImage value="#{request.contextPath}/images/logo_overtime.jpg" styleClass="logo-overtime-main" />
+                    <h2 class="welcome-title">Bienvenido a <span>OverTime</span></h2>
+                    <p style="font-size: 1.2rem; color: #555;">Tu plataforma para la gestión de eventos deportivos.</p>
+                    <ul class="features-list">
+                        <li><i class="pi pi-fw pi-calendar"></i>Visualiza los eventos deportivos disponibles.</li>
+                        <li><i class="pi pi-fw pi-chart-bar"></i>Consulta estadísticas y tablas de posiciones.</li>
+                        <li><i class="pi pi-fw pi-users"></i>Fomentamos el deporte y la competencia sana.</li>
+                    </ul>
+                    <p:commandButton value="Login" icon="pi pi-arrow-right"
+                                     action="login.xhtml?faces-redirect=true"
+                                     styleClass="action-button" />
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

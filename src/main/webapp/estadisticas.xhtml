@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/base.xhtml">
+    <ui:define name="title-view">OverTime - Estadísticas</ui:define>
+
+    <ui:define name="content">
+        <h:form id="estadisticasForm"> <style>
+            .section-header { font-size: 2rem; font-weight: bold; color: #1A1A1A; margin-top: 2rem; margin-bottom: 1.5rem; text-align: center; }
+            .data-table-panel { width: 100%; max-width: 1000px; margin-left: auto; margin-right: auto; margin-bottom: 2rem; }
+            .action-button { font-size: 1.1rem !important; padding: 10px 25px !important; font-weight: 600 !important; transition: transform 0.2s ease; }
+        </style>
+
+            <h:panelGroup rendered="#{authBean.userLoggedIn}">
+                <div class="section-header">Estadísticas del Torneo</div>
+
+                <p:messages id="messages" showDetail="true" closable="true">
+                    <p:autoUpdate/>
+                </p:messages>
+
+                <p:panel header="Tabla de Posiciones" styleClass="data-table-panel ui-shadow-3">
+                    <p:dataTable id="dtPosiciones" value="#{estadisticasBean.tablaPosiciones}" var="equipo" emptyMessage="No hay equipos registrados o datos de posiciones." responsiveLayout="scroll">
+                        <p:column headerText="Posición" sortBy="#{equipo.posicion}">
+                            <h:outputText value="#{equipo.posicion}"/>
+                        </p:column>
+                        <p:column headerText="Equipo" sortBy="#{equipo.nombre}">
+                            <h:outputText value="#{equipo.nombre}"/>
+                        </p:column>
+                        <p:column headerText="PJ" sortBy="#{equipo.jugados}">
+                            <h:outputText value="#{equipo.jugados}"/>
+                        </p:column>
+                        <p:column headerText="PG" sortBy="#{equipo.ganados}">
+                            <h:outputText value="#{equipo.ganados}"/>
+                        </p:column>
+                        <p:column headerText="PE" sortBy="#{equipo.empatados}">
+                            <h:outputText value="#{equipo.empatados}"/>
+                        </p:column>
+                        <p:column headerText="PP" sortBy="#{equipo.perdidos}">
+                            <h:outputText value="#{equipo.perdidos}"/>
+                        </p:column>
+                        <p:column headerText="PTS" sortBy="#{equipo.puntos}">
+                            <h:outputText value="#{equipo.puntos}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <f:facet name="footer">
+                        <p:commandButton value="Actualizar Posiciones" action="#{estadisticasBean.recalcularPosiciones}"
+                                         update=":estadisticasForm:dtPosiciones :estadisticasForm:messages"
+                                         icon="pi pi-refresh" style="background-color:#003366; color:white; font-weight:bold;"/>
+                    </f:facet>
+                </p:panel>
+
+                <p:panel header="Top de Goleadores" styleClass="data-table-panel ui-shadow-3">
+                    <p:dataTable id="dtGoleadores" value="#{estadisticasBean.topGoleadores}" var="goleador" emptyMessage="No hay goleadores registrados aún." responsiveLayout="scroll">
+                        <p:column headerText="Posición" sortBy="#{goleador.posicion}">
+                            <h:outputText value="#{goleador.posicion}"/>
+                        </p:column>
+                        <p:column headerText="Nombre del Jugador" sortBy="#{goleador.nombre}">
+                            <h:outputText value="#{goleador.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Equipo" sortBy="#{goleador.equipo}">
+                            <h:outputText value="#{goleador.equipo}"/>
+                        </p:column>
+                        <p:column headerText="Goles" sortBy="#{goleador.goles}">
+                            <h:outputText value="#{goleador.goles}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <f:facet name="footer">
+                        <p:commandButton value="Actualizar Goleadores" action="#{estadisticasBean.recalcularGoleadores}"
+                                         update=":estadisticasForm:dtGoleadores :estadisticasForm:messages"
+                                         icon="pi pi-refresh" style="background-color:#FF4D00; color:white; font-weight:bold;"/>
+                    </f:facet>
+                </p:panel>
+
+
+                <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+                    <p:button value="Volver al Inicio" outcome="index.xhtml"
+                              style="background-color: #003366; border-color: #003366; color: white; margin-right: 1rem;"
+                              icon="pi pi-arrow-left" styleClass="action-button" />
+                    <p:button value="Gestionar Torneos" outcome="tournament_management.xhtml"
+                              style="background-color: #FF4D00; border-color: #FF4D00; color: white;"
+                              icon="pi pi-pencil" styleClass="action-button" />
+                </div>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not authBean.userLoggedIn}">
+                <div class="welcome-card">
+                    <h:graphicImage value="#{request.contextPath}/images/logo_overtime.jpg" styleClass="logo-overtime-main" />
+                    <h2 class="welcome-title">Acceso Restringido</h2>
+                    <p style="font-size: 1.2rem; color: #555;">Por favor, inicia sesión para acceder a las estadísticas.</p>
+                    <p:commandButton value="Ir a Login" icon="pi pi-arrow-right"
+                                     action="login.xhtml?faces-redirect=true"
+                                     styleClass="action-button" />
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
